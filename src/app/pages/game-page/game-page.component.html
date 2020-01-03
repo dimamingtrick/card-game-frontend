@@ -1,0 +1,43 @@
+<div class="game-container">
+  <button
+    *ngIf="!gameIsStarted && !gameIsLoading"
+    (click)="startGame()"
+    [disabled]="gameIsLoading"
+    mat-button
+  >
+    {{ !gameIsLoading ? "Start Game" : "" }}
+  </button>
+  <mat-spinner *ngIf="gameIsLoading && !gameIsStarted"></mat-spinner>
+
+  <div 
+    *ngIf="gameIsStarted"
+    id="game"
+  >
+    <button
+      *ngIf="game.isCompleted"
+      (click)="refreshGame()"
+      mat-button
+    >
+      Refresh Game
+    </button>
+    <div class="cards-container">
+      <div class="game-card" *ngFor="let card of cards">
+        <a
+          href="#"
+          (click)="!card.value && selectCard($event, card)"
+          [ngClass]="{'disabled-link': card.value}"
+        >
+        <div class="game-card" [ngClass]="{'isSelected' : card.value}">
+          <div class="game-card">
+            <div class="game-card-inner">
+              <div class="game-card-front"></div>
+              <div class="game-card-back">
+                {{ card.value || "" }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
