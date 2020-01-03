@@ -1,0 +1,16 @@
+<div class="game-card-outer" [ngClass]="{'isSelected' : card.value, 'notSelected' : card.value === false}">
+  <a
+    href="#"
+    (click)="!card.value && selectCard($event)"
+    [ngClass]="{'disabled-link': card.value}"
+  >
+    <div class="game-card">
+      <div class="game-card-inner">
+        <div class="game-card-front"></div>
+        <div class="game-card-back">
+          {{ card.value || "" }}
+        </div>
+      </div>
+    </div>
+  </a>
+</div>
