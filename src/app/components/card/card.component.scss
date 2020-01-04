@@ -4,6 +4,7 @@
   min-height: 300px;
   width: 100%;
   display: flex;
+  border-radius: 10px;
 
   a {
     display: flex;
@@ -22,6 +23,7 @@
   background-color: transparent;
   width: 100%;
   perspective: 1000px;
+  border-radius: 10px;
 }
 
 .game-card-inner {
@@ -32,6 +34,8 @@
   transition: transform .6s;
   transform-style: preserve-3d;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  border-radius: 10px;
+  will-change: transform;
 }
 
 .game-card-outer.notSelected .game-card-inner {
@@ -63,6 +67,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 10px;
 }
 
 .game-card-front {

@@ -17,7 +17,7 @@ export class GamePageComponent {
   gameIsStarted: Boolean = false;
   gameIsLoading: Boolean = false;
   game: GameModel = null;
-  cards: Array<CardModel | String> = [];
+  cards: Array<CardModel> = [];
   selectedCards: Array<String> = [];
 
   constructor(
@@ -25,12 +25,22 @@ export class GamePageComponent {
     public modal: MatDialog
   ) { }
 
-  startGame(): void {
+  startGame() {
     this.gameIsLoading = true;
+    this.loadGame();
+  }
+
+  loadGame(): void {
     this.gameService.startGame().subscribe((game: GameModel) => {
       this.cards = game.cards;
-      this.gameIsStarted = true;
-      this.gameIsLoading = false;
+      if (!this.gameIsStarted) {
+        this.gameIsStarted = true;
+      }
+      
+      if (this.gameIsLoading) {
+        this.gameIsLoading = false;
+      }
+      
       this.game = game;
     })
   }
@@ -43,10 +53,10 @@ export class GamePageComponent {
       if (this.game.isCompleted) {
         this.completeGame();
       } else {
-        this.cards.forEach((i, index) => {
-          const selectedCard = this.game.selectedCards.find((c: CardModel) => c._id === i);
-          if (selectedCard) {
-            this.cards[index] = selectedCard;
+        this.cards.forEach((i: CardModel) => {
+          const selectedCard = this.game.selectedCards.find((c: CardModel) => c._id === cardId);
+          if (i._id === cardId && selectedCard) {
+            i.value = selectedCard.value;
           }
         })
       }
@@ -54,32 +64,30 @@ export class GamePageComponent {
   }
 
   completeGame(): void {
-    this.cards.forEach((i, index) => {
-      const selectedCard = this.game.cards.find((c: CardModel) => c._id === i);
-      if (selectedCard) {
-        this.cards[index] = selectedCard;
+    this.cards.forEach((i: CardModel) => {
+      const selectedCard = this.game.cards.find((c: CardModel) => c._id === i._id);
+      if (selectedCard && !i.value) {
+        i.value = selectedCard.value;
       }
     });
 
-    this.modal.open(ModalComponent, {
-      width: '250px',
-      disableClose: true,
-      data: { title: `You ${this.game.status}`, message: "Start another game", refreshGame: this.refreshGame.bind(this) }
-    });
+    setTimeout(() => {
+      this.modal.open(ModalComponent, {
+        width: '350px',
+        disableClose: true,
+        data: { title: `You ${this.game.status}`, message: "Start another game", refreshGame: this.refreshGame.bind(this) }
+      });
+    }, 1000)
   }
 
   refreshGame(): void {
-    this.cards = this.cards.map((item: CardModel): CardModel => {
+    this.cards.forEach((item: CardModel) => {
       item.value = false;
-      return item;
     })
     
     setTimeout(() => {
-      this.gameIsStarted = false;
-      this.game = null;
       this.selectedCards = [];
-      this.cards = [];
-      this.startGame();
+      this.loadGame();
     }, 750)
   }
 }

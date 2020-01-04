@@ -8,13 +8,13 @@ import { CardModel } from 'src/app/models/card.model';
 })
 export class CardComponent {
 
-  @Input() card: String | CardModel;
+  @Input() card: CardModel;
   @Output() selectCardEmitter: EventEmitter<String | CardModel> = new EventEmitter();
 
   constructor() { }
 
   selectCard(event: any): void {
     event.preventDefault();
-    this.selectCardEmitter.emit(this.card);
+    this.selectCardEmitter.emit(this.card._id);
   }
 }

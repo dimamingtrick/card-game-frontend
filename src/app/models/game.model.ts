@@ -5,6 +5,6 @@ export interface GameModel {
   isCompleted: Boolean;
   status: String;
   createdAt: Date;
-  cards: Array<CardModel | String>;
+  cards: Array<CardModel>;
   selectedCards: Array<CardModel>;
 }
