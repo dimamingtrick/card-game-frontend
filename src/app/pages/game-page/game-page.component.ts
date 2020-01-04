@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, ViewChild } from '@angular/core';
 
 import { GameService } from 'src/app/services/game.service';
 import { GameModel } from 'src/app/models/game.model';
 import { GameRound } from 'src/app/models/gameRound.model';
 import { CardModel } from 'src/app/models/card.model';
-import { ModalComponent } from 'src/app/components/modal/modal.component';
+import { GameModalComponent } from 'src/app/components/modal/game-modal.component';
 
 @Component({
   selector: 'app-game-page',
@@ -16,13 +15,15 @@ export class GamePageComponent {
 
   gameIsStarted: Boolean = false;
   gameIsLoading: Boolean = false;
+  gameIsReloading: Boolean = false;
   game: GameModel = null;
   cards: Array<CardModel> = [];
   selectedCards: Array<String> = [];
 
+  @ViewChild(GameModalComponent, { static: false }) gameModal: GameModalComponent;
+
   constructor(
-    private gameService: GameService,
-    public modal: MatDialog
+    private gameService: GameService
   ) { }
 
   startGame() {
@@ -31,36 +32,55 @@ export class GamePageComponent {
   }
 
   loadGame(): void {
-    this.gameService.startGame().subscribe((game: GameModel) => {
-      this.cards = game.cards;
-      if (!this.gameIsStarted) {
-        this.gameIsStarted = true;
+    this.gameService.startGame().subscribe(
+      (game: GameModel) => {
+        this.cards = game.cards;
+
+        if (!this.gameIsStarted) {
+          this.gameIsStarted = true;
+        }
+
+        if (this.gameIsLoading) {
+          this.gameIsLoading = false;
+        }
+
+        if (this.gameIsReloading) {
+          this.gameIsReloading = false;
+        }
+
+        this.game = game;
+      },
+      (error: ErrorResponse) => {
+        console.log(`Load game error: ${error}`);
       }
-      
-      if (this.gameIsLoading) {
-        this.gameIsLoading = false;
-      }
-      
-      this.game = game;
-    })
+    )
   }
 
   selectCard(cardId: String): void {
-    this.selectedCards.push(cardId);
-    this.gameService.selectCard(this.game._id, this.selectedCards).subscribe((gameRound: GameRound) => {
-      this.game = gameRound.game;
-      
-      if (this.game.isCompleted) {
-        this.completeGame();
-      } else {
-        this.cards.forEach((i: CardModel) => {
-          const selectedCard = this.game.selectedCards.find((c: CardModel) => c._id === cardId);
-          if (i._id === cardId && selectedCard) {
-            i.value = selectedCard.value;
-          }
-        })
+    if (this.selectedCards.find((i: String) => i === cardId) || this.gameIsReloading) {
+      return;
+    }
+
+    this.gameService.selectCard(this.game._id, [...this.selectedCards, cardId]).subscribe(
+      (gameRound: GameRound) => {
+        this.selectedCards.push(cardId);
+        this.game = gameRound.game;
+
+        if (this.game.isCompleted) {
+          this.completeGame();
+        } else {
+          this.cards.forEach((i: CardModel) => {
+            const selectedCard = this.game.selectedCards.find((c: CardModel) => c._id === cardId);
+            if (i._id === cardId && selectedCard) {
+              i.value = selectedCard.value;
+            }
+          })
+        }
+      },
+      (error: ErrorResponse) => {
+        console.log("err", error);
       }
-    })
+    )
   }
 
   completeGame(): void {
@@ -72,10 +92,11 @@ export class GamePageComponent {
     });
 
     setTimeout(() => {
-      this.modal.open(ModalComponent, {
-        width: '350px',
-        disableClose: true,
-        data: { title: `You ${this.game.status}`, message: "Start another game", refreshGame: this.refreshGame.bind(this) }
+      this.gameModal.show({
+        title: `You ${this.game.status}`,
+        message: "Start another game",
+        submitButtonText: "Refresh Game",
+        onSubmit: this.refreshGame.bind(this),
       });
     }, 1000)
   }
@@ -84,9 +105,10 @@ export class GamePageComponent {
     this.cards.forEach((item: CardModel) => {
       item.value = false;
     })
-    
+
     setTimeout(() => {
       this.selectedCards = [];
+      this.gameIsReloading = true;
       this.loadGame();
     }, 750)
   }

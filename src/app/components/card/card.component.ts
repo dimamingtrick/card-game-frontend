@@ -9,7 +9,7 @@ import { CardModel } from 'src/app/models/card.model';
 export class CardComponent {
 
   @Input() card: CardModel;
-  @Output() selectCardEmitter: EventEmitter<String | CardModel> = new EventEmitter();
+  @Output() selectCardEmitter: EventEmitter<String> = new EventEmitter();
 
   constructor() { }
 
