@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatListModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule } from '@angular/material';
 
 import { AllGamesRoutingModule } from './all-games-routing.module';
 import { AllGamesComponent } from './all-games.component';
@@ -11,7 +12,11 @@ import { AllGamesComponent } from './all-games.component';
   ],
   imports: [
     CommonModule,
-    AllGamesRoutingModule
+    AllGamesRoutingModule,
+    MatListModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule
   ]
 })
 export class AllGamesModule { }

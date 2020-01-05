@@ -33,14 +33,14 @@
   text-align: center;
   transition: transform .6s;
   transform-style: preserve-3d;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px 5px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   will-change: transform;
 }
 
 .game-card-outer.notSelected .game-card-inner {
   transform: rotateY(180deg);
-  animation: rotateInitial .6s linear forwards
+  animation: rotateInitial .45s linear forwards
 }
 
 @keyframes rotateInitial {
@@ -50,7 +50,7 @@
 }
 
 .game-card-outer.isSelected .game-card-inner {
-  animation: rotate .6s linear forwards
+  animation: rotate .45s linear forwards
 }
 
 @keyframes rotate {
@@ -78,11 +78,16 @@
 }
 
 .game-card-back {
-  background-color: #2980b9;
-  color: white;
+  background-color: #fff;
+  color: #000;
   transform: rotateY(180deg);
 }
 
 .disabled-link {
   cursor: not-allowed;
+}
+
+span.card-value {
+  font-size: 5rem;
+  font-family: monospace;
 }

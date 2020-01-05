@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.gameService.games.subscribe((games: Array<GameModel>) => {
       this.games = games;
-    })
+    });
   }
 
 }

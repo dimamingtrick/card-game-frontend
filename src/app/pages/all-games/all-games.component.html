@@ -1,1 +1,25 @@
-<p>all-games works!</p>
+<div class="games-list-container">
+  <mat-list>
+    <mat-list-item *ngFor="let game of games">
+      <div class="game-list-item">
+        {{game._id}}
+        <button
+          mat-icon-button
+          color="warn"
+          [disabled]="isDeleting(game._id)"
+          (click)="deleteGame(game._id)"
+          aria-label="Delete game icon"
+        >
+          <mat-icon
+            *ngIf="!isDeleting(game._id)"
+          >delete</mat-icon>
+          <mat-spinner
+            diameter="25"
+            color="warn"
+            *ngIf="isDeleting(game._id)"
+          ></mat-spinner>
+        </button>
+      </div>
+    </mat-list-item>
+  </mat-list>
+</div>
