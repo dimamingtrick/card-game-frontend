@@ -1,6 +1,9 @@
 export interface GameModalData {
   title?: String;
   message?: String;
-  submitButtonText?: String;
-  onSubmit?: Function | null
+  firstButtonText?: String;
+  secondButtonText?: String;
+  timeout?: number;
+  onFirstButtonClick?: Function | null,
+  onSecondButtonClick?: Function | null,
 };

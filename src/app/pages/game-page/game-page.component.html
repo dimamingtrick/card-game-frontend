@@ -17,6 +17,7 @@
       <card
         *ngFor="let card of cards"
         [card]="card"
+        [disabled]="requestLoading"
         (selectCardEmitter)="selectCard($event)"
       ></card>
   </div>

@@ -4,7 +4,7 @@ import { MatIconModule, MatMenuModule, MatButtonModule, MatProgressSpinnerModule
 
 import { GamePageRoutingModule } from './game-page-routing.module';
 import { GamePageComponent } from './game-page.component';
-import { GameModalComponent } from 'src/app/components/modal/game-modal.component';
+import { GameModalComponent } from 'src/app/components/game-modal/game-modal.component';
 import { CardComponent } from 'src/app/components/card/card.component';
 
 @NgModule({

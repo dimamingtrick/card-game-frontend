@@ -1,0 +1,13 @@
+<div *ngIf="isOpen" class="modal">
+  <div class="modal-bg"></div>
+  <div class="modal-content">
+    <h1 class="title" mat-dialog-title>{{data.title}}</h1>
+    <div class="message" mat-dialog-content>
+      <p>{{data.message}}</p>
+    </div>
+    <div class="buttons" mat-dialog-actions>
+      <button mat-button cdkFocusInitial (click)="handleFirstButtonClick()">{{data.firstButtonText}}</button>
+      <button *ngIf="data.secondButtonText" mat-button (click)="handleSecondButtonClick()">{{data.secondButtonText}}</button>
+    </div>
+  </div>
+</div>

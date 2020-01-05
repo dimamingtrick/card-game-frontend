@@ -4,8 +4,11 @@ import { GameModalData } from 'src/app/models/gameModalData.model';
 const defaultModalData: GameModalData = {
   title: "",
   message: "",
-  submitButtonText: "",
-  onSubmit: (): void => {}
+  firstButtonText: "",
+  secondButtonText: "",
+  timeout: 0,
+  onFirstButtonClick: (): void => { },
+  onSecondButtonClick: (): void => { }
 };
 
 @Component({
@@ -21,8 +24,11 @@ export class GameModalComponent {
   constructor() { }
 
   show(data: GameModalData): void {
-    this.data = data;
-    this.isOpen = true;
+    this.data = { ...this.data, ...data };
+
+    setTimeout(() => {
+      this.isOpen = true;
+    }, this.data.timeout);
   }
 
   close(): void {
@@ -30,8 +36,13 @@ export class GameModalComponent {
     this.data = defaultModalData;
   }
 
-  refreshGame(): void {
-    this.data.onSubmit();
+  handleFirstButtonClick(): void {
+    this.data.onFirstButtonClick();
+    this.close();
+  }
+
+  handleSecondButtonClick(): void {
+    this.data.onSecondButtonClick();
     this.close();
   }
 }
