@@ -15,10 +15,11 @@ export class CardComponent {
   constructor() { }
 
   selectCard(event: any): void {
+    event.preventDefault();
+    
     if (this.disabled || this.card.value) {
       return;
     };
-    event.preventDefault();
     this.selectCardEmitter.emit(this.card._id);
   }
 }

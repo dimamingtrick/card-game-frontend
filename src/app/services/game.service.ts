@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from "rxjs";
+import { Observable, BehaviorSubject, Subscription } from "rxjs";
 import { tap } from "rxjs/operators";
 import { environment } from "../../environments/environment";
 import { GameModel } from '../models/game.model';
 import { ErrorResponse } from '../models/errorResponse.model';
 import { socket } from '../app.component';
+import { ErrorStateMatcher } from '@angular/material';
 
 export interface TakePriseResponse {
   message: String;
@@ -21,20 +22,19 @@ export class GameService {
     private http: HttpClient
   ) {
     socket.on("gamesChange", (newGame: GameModel) => {
-      this.games.next([...this.games.getValue(), newGame]);
+      this.games.next([newGame, ...this.games.getValue()]);
     })
   }
 
   public games: BehaviorSubject<Array<GameModel>> = new BehaviorSubject([]);
 
-  public getAllGames(): Observable<Object | Error> {
-    return this.http.get(`${environment.apiURL}/game/all-games`)
-      .pipe(
-        tap((response: Array<GameModel>) => {
-          this.games.next(response);
-          return response;
-        })
-      )
+  public getAllGames(): Subscription {
+    return this.http.get(`${environment.apiURL}/game/all-games`).subscribe(
+      (response: Array<GameModel>) => {
+        this.games.next(response);
+        console.log(response)
+      }
+    );
   }
 
   public startGame(): Observable<Object | ErrorResponse> {
